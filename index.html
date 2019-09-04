@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<meta name="viewport" content="width=device-width,intial-scale=1,user-scalable=no"/>
+    <script type="text/javascript" src="./mWebView.js"></script>
+	<style type="text/css">
+         .wrap{
+         	width: 50px;
+         	height: 50px;
+         	background: green;
+         	margin: 0 auto;
+         	animation: dongtai 2s infinite linear;
+         	margin-top: 50px;
+         }
+         @-webkit-keyframes dongtai {
+         	25% {
+         		transform: rotate(20deg) scale(1);
+         	}
+         	50% {
+         		transform: rotate(360deg) scale(2);
+         	}
+         	75% {
+         		transform: rotate(360deg) scale(1);
+         	}
+         	100% {
+         		transform: rotate(20deg) scale(2);
+         	}
+         }
+         p{
+         	margin-top: 100px;
+         }
+         button{
+         	margin-top: 10px;
+         	width: 200px;
+         	height: 50px;
+         }
+         .name_fill{
+            width: 200px;
+            height: 35px;
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+            font-size: 20px;
+            border-radius: 5px;
+         }
+         #tokenValue{
+            width: 100%;
+            margin-top: 0px;
+            word-wrap: break-word;
+         }
+         .box_list{
+            margin-top: 10px;
+         }
+	</style>
+</head>
+<body>
+    <div>
+        <div class="wrap"></div>
+         <p>callback回调返回的数据: </p> 
+         <p id="tokenValue"></p>
+         <div>
+           <span>1方法名字:</span>
+           <input id="methods_name" class="name_fill" type="text" name=""/>
+           <button id="btn">点击触发方法1回调</button>
+         </div>
+
+         <div class="box_list">
+           <span>2方法名字:</span>
+           <input id="methods_name2" class="name_fill" type="text" name=""/>
+           <button id="btn2">2点击触发方法2回调</button>
+         </div>
+
+         <div>
+            <button id="h5_android">方法h5_android</button>
+         </div>
+    </div>
+	<script type="text/javascript">
+        (function(){
+            let app = jnsApi();
+            let obj = {
+                init:function(){
+                  this.bind()
+                },
+                bind: function(){
+                    document.getElementById('btn').addEventListener('click', function () {
+                        var methods_name = document.getElementById('methods_name').value;
+                        app['registerHandler'](methods_name).then((res) => {
+                            document.getElementById('tokenValue').innerHTML = res;
+                        }, error => {
+                            console.log('new Error()');
+                        })
+                    });
+                    document.getElementById('btn2').addEventListener('click', function () {
+                        var methods_name2 = document.getElementById('methods_name2').value;
+                            methods_name2 = methods_name2.trim().toString();
+                            if (methods_name2) {
+                                WebViewJavascriptBridge.registerHandler(methods_name2, function(res){
+                                  document.getElementById('tokenValue').innerHTML = JSON.stringify(res);
+                                })
+                            }
+                    });
+
+                    document.getElementById('h5_android').addEventListener('click', function () {
+                        var this_val = h5_android.getToken();
+                        document.getElementById('tokenValue').innerHTML = JSON.stringify(this_val);
+                    });
+                }
+            }
+
+            obj.init();
+
+
+
+        })()
+	</script>
+</body>
+</html>
